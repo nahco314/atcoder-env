@@ -1,0 +1,26 @@
+[project]
+name = "atcoder-env"
+version = "0.1.0"
+description = "Add a short description here"
+authors = [
+    { name = "nahco314", email = "nahco3_ta@yahoo.co.jp" }
+]
+dependencies = []
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[project.scripts]
+atcoder-env = "atcoder_env.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+
+
+[tool.rye]
+managed = true
+dev-dependencies = ["black~=23.10.1", "isort~=5.12.0", "ruff~=0.1.2", "google~=3.0.0", "gspread~=5.12.0", "setuptools~=68.2.2"]
+[tool.hatch.metadata]
+allow-direct-references = true
