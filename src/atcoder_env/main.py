@@ -1,94 +1,46 @@
 import argparse
-import subprocess
 from pathlib import Path
-from tempfile import TemporaryFile
+from typing import Any
 
-from atcoder_env.languages import Language, get_language
+from atcoder_env.languages import get_language, search_language
+from atcoder_env.run import run
 
 
-def run(language: Language, file_path: Path) -> None:
-    with TemporaryFile() as dummy_stdin:
-        create_res = subprocess.run(
-            [
-                "docker",
-                "create",
-                "-i",
-                "-v",
-                f"{file_path.absolute()}:/judge/{language.filename}:ro",
-                f"atcoder-env:{language.tag_name}",
-            ],
-            stdin=dummy_stdin,
-            capture_output=True,
-            check=True,
-        )
+def handle_run(args: Any) -> None:
+    language_id: str = getattr(args, "language-id")
+    file_path: Path = getattr(args, "file-path")
 
-        container_id = create_res.stdout.strip()
+    run(get_language(language_id), file_path)
 
-        try:
-            subprocess.run(
-                [
-                    "docker",
-                    "start",
-                    container_id,
-                ],
-                stdin=dummy_stdin,
-                capture_output=True,
-                check=True,
-            )
 
-            compile_res = subprocess.run(
-                ["docker", "exec", "-i", container_id, "/tmp/run.bash", "compile"],
-                stdin=dummy_stdin,
-                capture_output=True,
-                check=False,
-            )
+def handle_search(args: Any) -> None:
+    language_name: str = getattr(args, "language-name")
 
-            check_res = subprocess.run(
-                ["docker", "exec", "-i", container_id, "/tmp/run.bash", "check"],
-                stdin=dummy_stdin,
-                capture_output=True,
-                check=False,
-            )
+    lst = search_language(language_name)
 
-            if check_res.stdout.strip() == b"1":
-                print("Compile Error")
-                print(compile_res.stderr.decode())
-                exit(1)
-
-            run_res = subprocess.run(
-                ["docker", "exec", "-i", container_id, "/tmp/run.bash", "run"],
-                capture_output=False,
-                check=False,
-            )
-
-            if run_res.returncode != 0:
-                exit(run_res.returncode)
-
-        finally:
-            subprocess.run(
-                [
-                    "docker",
-                    "rm",
-                    "-f",
-                    container_id,
-                ],
-                capture_output=True,
-                check=True,
-            )
+    for lang in lst:
+        print(f"{lang.display_id}:")
+        print(f"  id  : {lang.id}")
+        print(f"  tag : {lang.tag_name}")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser("atcoder-env")
 
-    parser.add_argument("language-name", type=str)
-    parser.add_argument("file-path", type=Path)
+    subparsers = parser.add_subparsers()
+
+    run_parser = subparsers.add_parser("run")
+    run_parser.set_defaults(handler=handle_run)
+    run_parser.add_argument("language-id", type=str)
+    run_parser.add_argument("file-path", type=Path)
+
+    search_parser = subparsers.add_parser("search")
+    search_parser.set_defaults(handler=handle_search)
+    search_parser.add_argument("language-name", type=str)
 
     args = parser.parse_args()
 
-    language_name = getattr(args, "language-name")
-    file_path = getattr(args, "file-path")
-
-    run(get_language(language_name), file_path)
+    args.handler(args)
 
 
 if __name__ == "__main__":

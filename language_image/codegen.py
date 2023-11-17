@@ -1,5 +1,4 @@
-from pathlib import Path
-from textwrap import dedent, indent
+from textwrap import indent
 
 import gspread
 from google.oauth2.service_account import Credentials

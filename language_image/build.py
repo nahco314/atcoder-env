@@ -1,6 +1,5 @@
 import subprocess
 from multiprocessing import Pool
-from pathlib import Path
 
 from atcoder_env.languages import Language, languages
 
@@ -9,7 +8,7 @@ def process(lang: Language) -> None:
     print(f"Building {lang.display_name}...")
 
     try:
-        res = subprocess.run(
+        subprocess.run(
             f'DOCKER_BUILDKIT=1 docker build -t atcoder-env:{lang.tag_name} "./images/{lang.id}"',
             shell=True,
             check=True,

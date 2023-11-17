@@ -46,11 +46,19 @@ def process(raw_command: str) -> list[str]:
     return dedent(raw_command)[1:-1].splitlines()
 
 
-def get_language(name: str) -> Language:
+def get_language(id_: str) -> Language:
     for language in languages:
-        if language.name == name:
+        if language.id == id_:
             return language
-    raise ValueError(f'Language "{name}" not found')
+    raise ValueError(f'Language "{id_}" not found')
+
+
+def search_language(name: str) -> list[Language]:
+    res = []
+    for language in languages:
+        if language.name.lower() == name.lower():
+            res.append(language)
+    return res
 
 
 languages = [
