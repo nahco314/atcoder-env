@@ -8,6 +8,8 @@
 
 また、言語処理系に関する環境構築が不要になります。
 
+なお、動かすには docker cli がインストールされている必要があります。
+
 ## インストール
 
 [rye](https://rye-up.com/guide/installation/) を使う場合:

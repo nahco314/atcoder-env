@@ -10,6 +10,8 @@ There are some differences from the actual AtCoder environment, but the version 
 
 Also, it eliminates the need for setting up an environment for the language processing system.
 
+Please note that docker cli must be installed in order to run.
+
 ## Installation
 
 If you are using [rye](https://rye-up.com/guide/installation/):
