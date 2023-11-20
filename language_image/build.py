@@ -9,7 +9,7 @@ def process(lang: Language) -> None:
 
     try:
         subprocess.run(
-            f'DOCKER_BUILDKIT=1 docker build -t atcoder-env:{lang.tag_name} "./images/{lang.id}"',
+            f'DOCKER_BUILDKIT=1 docker build -t nahco314/atcoder-env:{lang.tag_name} "./images/{lang.id}"',
             shell=True,
             check=True,
             capture_output=True,

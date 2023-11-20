@@ -19,7 +19,7 @@ def run(language: Language, file_path: Path) -> None:
                 "-i",
                 "--mount",
                 f"type=bind,source={file_path.absolute()},target=/judge/{language.filename}",
-                f"atcoder-env:{language.tag_name}",
+                f"nahco314/atcoder-env:{language.tag_name}",
             ],
             stdin=dummy_stdin,
             capture_output=True,
