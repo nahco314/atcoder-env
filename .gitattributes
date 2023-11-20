@@ -1,1 +1,2 @@
 language_image/images/*/Dockerfile linguist-generated=true
+language_image/images/*/run.bash linguist-generated=true
